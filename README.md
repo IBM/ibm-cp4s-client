@@ -2,7 +2,7 @@
 
 A python package for interacting with CP4S (CloudPak for Security).
 
-![How does it work?](https://github.ibm.com/raymundl/ibm-cp4s-client/blob/master/ibm-cp4s-client.png?raw=true)
+![How does it work?](https://github.com/IBM/ibm-cp4s-client/blob/master/ibm-cp4s-client.png?raw=true)
 
 # Getting started
 
