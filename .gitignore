@@ -3,3 +3,5 @@ dist
 MANIFEST
 poetry.lock
 pyproject.toml
+.ipynb_checkpoints
+.vscode

@@ -8,11 +8,11 @@ A python package for interacting with CP4S (CloudPak for Security).
 
 ## Prerequisites
 
-1. CP4S >= 1.4
+1. CP4S version >= 1.4
 1. Python 3
 1. (Optional) Jupyter Notebook, JupyterHub, or Jupyter Lab
 
-* Note: This package was designed to be used within a Jupyter Notebook environment. However, it should also work in general python programs.
+Note: This package was designed to be used within a Jupyter Notebook environment. However, it should also work in general python programs.
 
 ## Installing
 
@@ -43,6 +43,10 @@ mdf = ac.search_df(
     query="[ipv4-addr:value = '127.0.0.1']",
     configs="all")
 ```
+
+# Examples
+
+* [Load Dataframe from CP4S](https://github.com/IBM/ibm-cp4s-client/blob/master/examples/cp4s-client.ipynb)
 
 # References
 
