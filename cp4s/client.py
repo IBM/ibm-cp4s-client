@@ -14,6 +14,7 @@
 
 
 import time
+import pandas as pd
 from cp4s.aitk.api import set_conn_info
 from cp4s.aitk.Job import Job
 
@@ -25,14 +26,15 @@ class Atk(object):
 
     def search_df(self, query: str, configs: str = 'all'):
         uds = 'uds query="%s"' % query if configs == 'all' else 'uds query="%s" configs="%s"' % (query, configs)
-        job = Job('ci-redis', {
+        job = Job('command-interpreter', {
             '${COMMAND}': '%s | table' % uds,
             '${FILE2REDISINPUT}': "result.json"
         })
         while True:
             status = job.status()
             if status == 'Completed':
-                return job.result()
+                result = job.result()
+                return pd.DataFrame.from_records(result['rows'])
             if status == 'Failed':
                 return None
             time.sleep(1)
