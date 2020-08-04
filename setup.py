@@ -8,7 +8,7 @@ setup(
     version='0.0.1',
     author='Raymund Lin',
     author_email='raymundl@tw.ibm.com',
-    packages=['cp4s', 'cp4s/aitk'],
+    packages=['cp4s', 'cp4s/atk'],
     scripts=[],
     url='https://github.com/ibm/ibm-cp4s-client',
     license="Apache License 2.0",

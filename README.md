@@ -31,13 +31,13 @@ One can also build a tar file from his/her local repository, and install it like
 Calling of CP4S APIs are abstracted into client "objects" and "methods".
 One need to properly create a CP4S object supplying `url`, `username` and `password` before using it. The `username` and `password` are API keys obtained from the "Settings" page in CP4S, while `url` is the homepage of CP4S plus `/api` path, like the following.
 ```
-from cp4s.client import Atk
-ac = Atk(url='https://{{CP4S_homepage}}/api',
+from cp4s.client import CP4S
+ac = CP4S(url='https://{{CP4S_homepage}}/api',
          username='0afa44ea210553628a9787399a5efffb',
          password='b4d8dce926e64df89c050680655076c1')
 ```
 
-Note that *Atk* is the abbreviation of "Analytic Toolkits", which is one of the core CP4S components. Atk will retrieve results of STIX queries, and convert them into tables suitable for analyses. As shown in the following, one can use the method `search_df` to query the data sources of CP4S, and acquire a table in JSON format.
+Note that *CP4S* is the abbreviation of "Cloud Pak for Security". A method of the CP4S client (`ac`) hides the details of interacting with different CP4S components to complete a particular job, therefore users can focus on high-level objectives when invoking the methods. For instance, the method `search_df` will retrieve results of STIX queries (via UDI component of CP4S), and convert them into tables suitable for analyses (via ATK component of CP4S). The components are subject to change while CP4S is evolving, therefore their naming and functions are not discussed here.
 ```
 mdf = ac.search_df(
     query="[ipv4-addr:value = '127.0.0.1']",

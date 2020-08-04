@@ -13,21 +13,26 @@
 # limitations under the License.
 
 
+import re
 import time
+import json
 import pandas as pd
-from cp4s.aitk.api import set_conn_info
-from cp4s.aitk.Job import Job
+from cp4s.atk.api import set_conn_info
+from cp4s.atk.Job import Job
 
 
 # High-level interface
-class Atk(object):
+class CP4S(object):
     def __init__(self, url, username, password):
         set_conn_info(url, '%s:%s' % (username, password))
 
     def search_df(self, query: str, configs: str = 'all'):
-        uds = 'uds query="%s"' % query if configs == 'all' else 'uds query="%s" configs="%s"' % (query, configs)
+        if re.match(r'[a-z]+ ', query):  # user has specified a command
+            cmd = query
+        else:  # defaults to a uds command
+            cmd = 'uds query="%s"' % query if configs == 'all' else 'uds query="%s" configs="%s"' % (query, configs)
         job = Job('command-interpreter', {
-            '${COMMAND}': '%s | table' % uds,
+            '${COMMAND}': '%s | table' % cmd,
             '${FILE2REDISINPUT}': "result.json"
         })
         while True:
@@ -36,5 +41,6 @@ class Atk(object):
                 result = job.result()
                 return pd.DataFrame.from_records(result['rows'])
             if status == 'Failed':
+                print('Job [search_df] failed with: %s' % json.dumps(job.result(), indent=4))
                 return None
             time.sleep(1)
