@@ -29,7 +29,7 @@ One can also build a tar file from his/her local repository, and install it like
 ## Calling CP4S APIs
 
 Calling of CP4S APIs are abstracted into client "objects" and "methods".
-One need to properly create a CP4S object supplying `url`, `username` and `password` before using it. The `username` and `password` are API keys obtained from the "Settings" page in CP4S, while `url` is the homepage of CP4S plus `/api` path, like the following.
+One need to properly create a CP4S object supplying `url`, `username` and `password` before using it. The `username` and `password` are API keys obtained from the "Settings" page in CP4S (see [here](https://www.ibm.com/support/knowledgecenter/SSTDPP_1.1.0/docs/scp-core/apikey.html) for details), while `url` is the homepage of CP4S plus `/api` path, like the following.
 ```
 from cp4s.client import CP4S
 ac = CP4S(url='https://{{CP4S_homepage}}/api',
