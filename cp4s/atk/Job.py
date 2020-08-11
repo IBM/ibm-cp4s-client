@@ -25,14 +25,15 @@ from .api import HTTPError
 
 # High-level interface
 class Job(object):
-    def __init__(self, name, params, preserve=False, schedule=None):
+    def __init__(self, name, params, preserve=False, schedule=None, verbose=False):
         self.id = None
         self._status = 'Started'
         self._preserve = preserve
         data = {'param': params}
         if schedule:
             data['schedule'] = schedule
-        print(json.dumps(data, indent=2))
+        if verbose:
+            print(json.dumps(data, indent=2))
         resp = post(api_base() + '/workflow/' + name, headers=headers, json=data)
         if not resp.ok:
             raise HTTPError(resp)
