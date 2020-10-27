@@ -57,7 +57,7 @@ class Job(object):
         resp = get(api_base() + '/job/{}/result'.format(self.id), headers=headers)
         if not resp.ok:
             raise HTTPError(resp)
-        return json.loads(resp.json()['result'])  # FIXME: ugliness in orch API
+        return resp.json()
 
     def service(self, req):
         resp = get(api_base() + '/job/{}/service/{}'.format(self.id, req), headers=headers)

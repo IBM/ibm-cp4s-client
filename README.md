@@ -8,7 +8,7 @@ A python package for interacting with CP4S (CloudPak for Security).
 
 ## Prerequisites
 
-1. CP4S version >= 1.4
+1. CP4S version >= 1.5
 1. Python 3
 1. (Optional) Jupyter Notebook, JupyterHub, or Jupyter Lab
 

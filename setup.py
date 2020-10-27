@@ -5,7 +5,7 @@ with open('requirements.txt') as f:
 
 setup(
     name='ibm-cp4s-client',
-    version='0.0.1',
+    version='0.0.2',
     author='Raymund Lin',
     author_email='raymundl@tw.ibm.com',
     packages=['cp4s', 'cp4s/atk'],
