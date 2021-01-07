@@ -23,8 +23,10 @@ from cp4s.atk.Job import Job
 
 # High-level interface
 class CP4S(object):
-    def __init__(self, url, username, password):
-        set_conn_info(url, '%s:%s' % (username, password))
+    def __init__(self, url, username, password, verbose=False):
+        self.creds = '%s:%s' % (username, password)
+        self.verbose = verbose
+        set_conn_info(url, self.creds)
 
     def search_df(self, query: str, configs: str = 'all'):
         if re.match(r'[a-z]+ ', query):  # user has specified a command
@@ -32,15 +34,18 @@ class CP4S(object):
         else:  # defaults to a uds command
             cmd = 'uds query="%s"' % query if configs == 'all' else 'uds query="%s" configs="%s"' % (query, configs)
         job = Job('command-interpreter', {
+            '${CREDENTIALS}': {
+                'apikey': self.creds
+            },
             '${COMMAND}': '%s | table' % cmd,
             '${FILE2REDISINPUT}': "result.json"
-        })
+        }, verbose=self.verbose)
         while True:
             status = job.status()
             if status == 'Completed':
                 result = job.result()
                 return pd.DataFrame.from_records(result['rows'])
             if status == 'Failed':
-                print('Job [search_df] failed with: %s' % json.dumps(job.result(), indent=4))
+                print('Job [search_df] failed with: %s' % json.dumps(job.taskstatus(), indent=4))
                 return None
             time.sleep(1)
