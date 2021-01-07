@@ -1,6 +1,6 @@
-# CP4S Client
+# IBM Cloud Pak for Security Client
 
-A python package for interacting with CP4S (CloudPak for Security).
+You can use this python package to interact with IBM Cloud Pak for Security.
 
 ![How does it work?](https://github.com/IBM/ibm-cp4s-client/blob/master/ibm-cp4s-client.png?raw=true)
 
@@ -8,28 +8,30 @@ A python package for interacting with CP4S (CloudPak for Security).
 
 ## Prerequisites
 
-1. CP4S version >= 1.4
-1. Python 3
-1. (Optional) Jupyter Notebook, JupyterHub, or Jupyter Lab
+* IBM Cloud Pak for Security 1.5.0 or later.
+* Python 3.6 or later.
+* (Optional) Jupyter Notebook, JupyterHub, or Jupyter Lab.
 
-Note: This package was designed to be used within a Jupyter Notebook environment. However, it should also work in general python programs.
+**Note:** Though this package was designed to run in a Jupyter Notebook environment, it should also work in any python programs.
 
 ## Installing
 
-To use the package, simply install it with `pip` in a notebook cell.
+To install the package, use the following `pip` command in a Notebook cell.
 ```
 !pip install git+git://github.com/ibm/ibm-cp4s-client.git
 ```
 
-One can also build a tar file from his/her local repository, and install it like the following.
+You can also build a compressed file from local repository, and install the package by running the following command.
 ```
 !pip install /Documents/Github/ibm-cp4s-client/dist/ibm-cp4s-client-0.0.1.tar.gz
 ```
 
-## Calling CP4S APIs
+## Calling IBM Cloud Pak for Security APIs
 
-Calling of CP4S APIs are abstracted into client "objects" and "methods".
-One need to properly create a CP4S object supplying `url`, `username` and `password` before using it. The `username` and `password` are API keys obtained from the "Settings" page in CP4S (see [here](https://www.ibm.com/support/knowledgecenter/SSTDPP_1.1.0/docs/scp-core/apikey.html) for details), while `url` is the homepage of CP4S plus `/api` path, like the following.
+Calling of IBM Cloud Pak for Security APIs are abstracted into client "objects" and "methods".
+You must create an IBM Cloud Pak for Security object by supplying `url`, `username`, and `password`. The `username` and `password` are API keys that are obtained from the **Settings** page in IBM Cloud Pak for Security. For more information, see [API key](https://www.ibm.com/support/knowledgecenter/en/SSTDPP_latest/platform/docs/scp-core/apikey.html).
+
+**Note:** `url` is the home page of CP4S plus `/api` path, for example:
 ```
 from cp4s.client import CP4S
 ac = CP4S(url='https://{{CP4S_homepage}}/api',
@@ -37,7 +39,7 @@ ac = CP4S(url='https://{{CP4S_homepage}}/api',
          password='b4d8dce926e64df89c050680655076c1')
 ```
 
-Note that *CP4S* is the abbreviation of "Cloud Pak for Security". A method of the CP4S client (`ac`) hides the details of interacting with different CP4S components to complete a particular job, therefore users can focus on high-level objectives when invoking the methods. For instance, the method `search_df` will retrieve results of STIX queries (via UDI component of CP4S), and convert them into tables suitable for analyses (via ATK component of CP4S). The components are subject to change while CP4S is evolving, therefore their naming and functions are not discussed here.
+*CP4S* is the abbreviation of "Cloud Pak for Security". Therefore, a method of the IBM Cloud Pak for Security client hides the details of interacting with different IBM Cloud Pak for Security components to complete a particular job. You can focus on high-level objectives when using the methods. For instance, the method `search_df` retrieves results of STIX queries (by UDI component of IBM Cloud Pak for Security), and converts them into tables for analysis (by ATK component of IBM Cloud Pak for Security).
 ```
 mdf = ac.search_df(
     query="[ipv4-addr:value = '127.0.0.1']",
@@ -50,4 +52,4 @@ mdf = ac.search_df(
 
 # References
 
-CP4S: https://www.ibm.com/products/cloud-pak-for-security
+[IBM Cloud Pak for Security](https://www.ibm.com/products/cloud-pak-for-security)
