@@ -23,9 +23,10 @@ from cp4s.atk.Job import Job
 
 # High-level interface
 class CP4S(object):
-    def __init__(self, url, username, password, verbose=False):
+    def __init__(self, url, username, password, verbose=False, verify=True):
         self.creds = '%s:%s' % (username, password)
         self.verbose = verbose
+        self.verify = verify  # verify cert or not
         set_conn_info(url, self.creds)
 
     def search_df(self, query: str, configs: str = 'all'):
@@ -38,8 +39,9 @@ class CP4S(object):
                 'apikey': self.creds
             },
             '${COMMAND}': '%s | table' % cmd,
-            '${FILE2REDISINPUT}': "result.json"
-        }, verbose=self.verbose)
+            '${FILE2REDISINPUT}': "result.json",
+            "${UPLOAD}": {"file": "result.json"}
+        }, verbose=self.verbose, verify=self.verify)
         while True:
             status = job.status()
             if status == 'Completed':

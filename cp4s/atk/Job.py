@@ -25,16 +25,17 @@ from .api import HTTPError
 
 # High-level interface
 class Job(object):
-    def __init__(self, name, params, preserve=False, schedule=None, verbose=False):
+    def __init__(self, name, params, preserve=False, schedule=None, verbose=False, verify=True):
         self.id = None
         self._status = 'Started'
         self._preserve = preserve
+        self.verify = verify
         data = {'param': params}
         if schedule:
             data['schedule'] = schedule
         if verbose:
             print(json.dumps(data, indent=2))
-        resp = post(api_base() + '/workflow/' + name, headers=headers, json=data)
+        resp = post(api_base() + '/workflow/' + name, headers=headers, json=data, verify=self.verify)
         if not resp.ok:
             raise HTTPError(resp)
         msg = resp.json()
@@ -42,7 +43,7 @@ class Job(object):
 
     def status(self):
         # TODO: cache job status?
-        resp = get(api_base() + '/job/{}/status'.format(self.id), headers=headers)
+        resp = get(api_base() + '/job/{}/status'.format(self.id), headers=headers, verify=self.verify)
         if not resp.ok:
             raise HTTPError(resp)
         msg = resp.json()
@@ -54,19 +55,19 @@ class Job(object):
         return self._taskstatus
 
     def result(self):
-        resp = get(api_base() + '/job/{}/result'.format(self.id), headers=headers)
+        resp = get(api_base() + '/job/{}/result'.format(self.id), headers=headers, verify=self.verify)
         if not resp.ok:
             raise HTTPError(resp)
         return resp.json()
 
     def service(self, req):
-        resp = get(api_base() + '/job/{}/service/{}'.format(self.id, req), headers=headers)
+        resp = get(api_base() + '/job/{}/service/{}'.format(self.id, req), headers=headers, verify=self.verify)
         if not resp.ok:
             raise HTTPError(resp)
         return resp.json()
 
     def __del__(self):
         if not self._preserve and self.id:
-            resp = delete(api_base() + '/job/' + self.id, headers=headers)
+            resp = delete(api_base() + '/job/' + self.id, headers=headers, verify=self.verify)
             if not resp.ok:
                 raise HTTPError(resp)
