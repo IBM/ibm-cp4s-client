@@ -54,11 +54,39 @@ class Job(object):
     def taskstatus(self):
         return self._taskstatus
 
-    def result(self):
-        resp = get(api_base() + '/job/{}/result'.format(self.id), headers=headers, verify=self.verify)
-        if not resp.ok:
-            raise HTTPError(resp)
-        return resp.json()
+    def result(self, verbose=False):
+        done = False
+        page = 0
+        data = ''
+        while not done:
+            try:
+                item = f'/job/{self.id}/result?page={page}'
+                resp = get(api_base() + item, headers=headers, verify=self.verify)
+                if verbose:
+                    print(f'Getting: {item} -> {resp.status_code}')
+                else:
+                    print(f'Receiving page: {page}')
+                if resp.ok:
+                    result = resp.json()
+                    if 'error' in result:
+                        print(result["error"])
+                    elif 'page' in result:
+                        if 'data' in result:
+                            data += result['data']
+                            if verbose:
+                                print(f'Saved: {len(data)}')
+                        if 'next' in result:
+                            page = result['next']
+                            if page == -1:
+                                done = True
+                    elif 'rows' in result:
+                        return result
+                elif resp.status_code != 503:
+                    print(resp.text)
+                    return {}
+            except Exception as e:
+                print(e)
+        return json.loads(data)
 
     def service(self, req):
         resp = get(api_base() + '/job/{}/service/{}'.format(self.id, req), headers=headers, verify=self.verify)

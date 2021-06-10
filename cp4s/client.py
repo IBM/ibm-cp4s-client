@@ -17,7 +17,7 @@ import re
 import time
 import json
 import pandas as pd
-from cp4s.atk.api import set_conn_info
+from cp4s.atk.api import set_conn_info, HTTPError
 from cp4s.atk.Job import Job
 
 
@@ -29,7 +29,7 @@ class CP4S(object):
         self.verify = verify  # verify cert or not
         set_conn_info(url, self.creds)
 
-    def search_df(self, query: str, configs: str = 'all'):
+    def search_df(self, query: str, configs: str = 'all', recheck_period=3):
         if re.match(r'[a-z]+ ', query):  # user has specified a command
             cmd = query
         else:  # defaults to a uds command
@@ -43,11 +43,21 @@ class CP4S(object):
             "${UPLOAD}": {"file": "result.json"}
         }, verbose=self.verbose, verify=self.verify)
         while True:
-            status = job.status()
+            try:
+                status = job.status()
+            except HTTPError as e:
+                if e.response.status_code not in [404, 503]:
+                    raise e from None
+                status = 'Unknown'
             if status == 'Completed':
-                result = job.result()
-                return pd.DataFrame.from_records(result['rows'])
+                print('Job [search_df] completed with: %s\n\nLoading pages now...' % json.dumps(job.taskstatus(), indent=4))
+                result = job.result(verbose=self.verbose)
+                print('Done.')
+                if 'rows' in result:
+                    return pd.DataFrame.from_records(result['rows'])
+                return None
             if status == 'Failed':
                 print('Job [search_df] failed with: %s' % json.dumps(job.taskstatus(), indent=4))
                 return None
-            time.sleep(1)
+            print('Status: %s, checking again in %d seconds' % (status, recheck_period))
+            time.sleep(recheck_period)
